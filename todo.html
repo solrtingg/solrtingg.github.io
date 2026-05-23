@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Solrting — My To-Do List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light|Inter:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #fbe8a6;
+      color: #45381e;
+      font-family: 'Inter', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
+    .container {
+      background: #fffde4;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 93vw;
+      margin: 40px 0 0 0;
+      box-shadow: 0 4px 24px #dab87a66;
+      padding: 1.8em 1.1em 1.5em 1.1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 2.3em;
+      color: #f49c1d;
+      margin-bottom: 0.75em;
+      letter-spacing: 0.04em;
+      text-shadow: 0 3px 8px #ffe4b0ad;
+      font-weight: 400;
+    }
+    form {
+      width: 100%;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.1em;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.55em 0.7em;
+      border-radius: 7px;
+      border: 1.5px solid #efd28f;
+      background: #fff8df;
+      font-size: 1em;
+      outline: none;
+      color: #5e4328;
+      box-shadow: 0 1px 4px #fbe8a6cc;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #f49c1d;
+    }
+    button {
+      background: #f49c1d;
+      color: #fff5e0;
+      border: none;
+      border-radius: 7px;
+      padding: 0 16px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 1px 5px #dab87a33;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #fac94d;
+      color: #9c6c09;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 100%;
+    }
+    li {
+      background: #fff3bc;
+      border-radius: 8px;
+      margin-bottom: 0.55em;
+      padding: 0.7em 0.95em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1.5px 6px #dab87a44;
+      font-size: 1.05em;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      min-height: 36px;
+    }
+    li.completed {
+      text-decoration: line-through;
+      background: #f1ecd6;
+      color: #b2a07b;
+      opacity: 0.61;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #ff5c5c;
+      font-size: 1.15em;
+      cursor: pointer;
+      margin-left: 12px;
+      font-weight: bold;
+      transition: color 0.2s, transform 0.1s;
+      border-radius: 3px;
+    }
+    .delete-btn:hover {
+      color: #f49c1d;
+      transform: scale(1.1);
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1em 0.2em 1em 0.2em;
+      }
+      h1 { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My To-Do List</h1>
+    <form id="todo-form" autocomplete="off">
+      <input type="text" id="todo-input" placeholder="Type a new task…" required>
+      <button type="submit">Add</button>
+    </form>
+    <ul id="todo-list"></ul>
+  </div>
+  <script>
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+
+    function createTodoItem(text) {
+      const li = document.createElement('li');
+      li.textContent = text;
+
+      li.addEventListener('click', function () {
+        li.classList.toggle('completed');
+      });
+
+      const del = document.createElement('button');
+      del.textContent = '✗';
+      del.className = 'delete-btn';
+      del.onclick = function (e) {
+        e.stopPropagation();
+        todoList.removeChild(li);
+      };
+
+      li.appendChild(del);
+      return li;
+    }
+
+    todoForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const value = todoInput.value.trim();
+      if (value !== '') {
+        const li = createTodoItem(value);
+        todoList.appendChild(li);
+        todoInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
