@@ -137,35 +137,54 @@
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
 
-    function createTodoItem(text) {
-      const li = document.createElement('li');
-      li.textContent = text;
+    // Load todos from localStorage, or start with an empty list
+    let todos = JSON.parse(localStorage.getItem('todos-solrting')) || [];
 
-      li.addEventListener('click', function () {
-        li.classList.toggle('completed');
+    function saveTodos() {
+      localStorage.setItem('todos-solrting', JSON.stringify(todos));
+    }
+
+    function renderTodos() {
+      todoList.innerHTML = '';
+      todos.forEach((item, idx) => {
+        const li = document.createElement('li');
+        li.textContent = item.text;
+        if (item.completed) li.classList.add('completed');
+
+        li.addEventListener('click', function () {
+          todos[idx].completed = !todos[idx].completed;
+          saveTodos();
+          renderTodos();
+        });
+
+        const del = document.createElement('button');
+        del.textContent = '✗';
+        del.className = 'delete-btn';
+        del.onclick = function (e) {
+          e.stopPropagation();
+          todos.splice(idx, 1);
+          saveTodos();
+          renderTodos();
+        };
+
+        li.appendChild(del);
+        todoList.appendChild(li);
       });
-
-      const del = document.createElement('button');
-      del.textContent = '✗';
-      del.className = 'delete-btn';
-      del.onclick = function (e) {
-        e.stopPropagation();
-        todoList.removeChild(li);
-      };
-
-      li.appendChild(del);
-      return li;
     }
 
     todoForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const value = todoInput.value.trim();
       if (value !== '') {
-        const li = createTodoItem(value);
-        todoList.appendChild(li);
+        todos.push({ text: value, completed: false });
+        saveTodos();
+        renderTodos();
         todoInput.value = '';
       }
     });
+
+    // Initial render
+    renderTodos();
   </script>
 </body>
 </html>
